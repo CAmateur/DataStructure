@@ -4,15 +4,15 @@
 #define MaxSize 10
 #define ElemType int
 
-struct _LineList
+typedef struct 
 {
 	ElemType data[MaxSize];
 	int length;
 
-}SqList;
+}SeqList;
 
 
-void InitList(_LineList &L)
+void InitList(SeqList &L)
 {
 	for (int i = 0; i < MaxSize; i++)
 		L.data[i] = 0;   //将所有数据元素设置为默认初始值
@@ -20,7 +20,7 @@ void InitList(_LineList &L)
 }
 
 
-void DestoryList(_LineList &L)
+void DestoryList(SeqList &L)
 {
 	for (int i = 0; i < L.length; i++)
 		L.data[i] = 0;   //将所有数据元素设置为默认初始值
@@ -28,7 +28,7 @@ void DestoryList(_LineList &L)
 
 }
 
-bool ListInsert(_LineList &L, int i, ElemType e)
+bool ListInsert(SeqList &L, int i, ElemType e)
 {
 	//提高代码的健壮性
 	if (L.length >= MaxSize)	//数据长度不能溢出
@@ -43,7 +43,7 @@ bool ListInsert(_LineList &L, int i, ElemType e)
 	return true;
 }
 
-bool ListDelete(_LineList &L, int i, ElemType &e)
+bool ListDelete(SeqList &L, int i, ElemType &e)
 {
 	//提高代码的健壮性
 	if (L.length == 0)	//数据长度不能溢出
@@ -58,7 +58,7 @@ bool ListDelete(_LineList &L, int i, ElemType &e)
 }
 
 
-int LocateElem(_LineList L, ElemType e)
+int LocateElem(SeqList L, ElemType e)
 {
 
 	for (int i = 0; i < L.length; i++)
@@ -67,7 +67,7 @@ int LocateElem(_LineList L, ElemType e)
 	return -1;		//函数返回值为-1代表找不到
 }
 
-ElemType GetElem(_LineList L, int i)
+ElemType GetElem(SeqList L, int i)
 {
 	//提高代码健壮性
 	if (i <= 0 || i >= L.length + 1)
@@ -76,19 +76,19 @@ ElemType GetElem(_LineList L, int i)
 }
 
 
-int Length(_LineList L)
+int Length(SeqList L)
 {
 	return L.length;
 }
 
-void PrintList(_LineList L)
+void PrintList(SeqList L)
 {
 	for (int i = 0; i < L.length; i++)
 		printf("%d ", L.data[i]);
 	printf("\n");
 }
 
-bool Empty(_LineList L)
+bool Empty(SeqList L)
 {
 	if (L.length == 0)
 		return true;
@@ -97,6 +97,7 @@ bool Empty(_LineList L)
 
 int main()
 {
+	SeqList SqList;
 	InitList(SqList);
 	if (Empty(SqList))
 		printf("List is empty.That indicate the list Init success!\n");
