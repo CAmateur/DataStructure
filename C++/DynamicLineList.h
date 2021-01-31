@@ -1,12 +1,6 @@
 //类模板实现方法必须和类创建的地方一致
 //第一个不能为默认值
 
-//待解决的问题：
-//1、类型的判断还不完善 --已经实现
-//2、待实现重载	--已经实现
-//3、智能指针  --已经实现
-
-
 #pragma once
 #include<iostream>
 #include<stdio.h>
@@ -65,15 +59,10 @@ LineList<T>::LineList(LineList<T> &rhs)
 	this->length = rhs.length;
 	this->MaxSize = rhs.MaxSize;
 
-	auto pData = this->data.get();
-	auto pRhs = rhs.data.get();
 
-	memset(pData, 0, this->MaxSize * sizeof(T));
-	for (int i = 0; i < this->length; i++)
-	{
-		pData[i] = pRhs[i];
+	memset(this->data.get(), 0, this->MaxSize * sizeof(T));
 
-	}
+	memcpy(this->data.get(), rhs.data.get(), this->length);
 }
 
 
@@ -104,15 +93,10 @@ inline LineList<T> & LineList<T>::operator=(LineList<T> &rhs)
 	this->length = rhs.length;
 	this->MaxSize = rhs.MaxSize;
 
-	auto pData = this->data.get();
-	auto pRhs = rhs.data.get();
 
-	memset(pData, 0, this->MaxSize * sizeof(T));
-	for (int i = 0; i < this->length; i++)
-	{
-		pData[i] = pRhs[i];
-
-	}
+	memset(this->data.get(), 0, this->MaxSize * sizeof(T));
+	
+	memcpy(this->data.get(), rhs.data.get(), this->length);
 	return *this;
 }
 
@@ -254,10 +238,7 @@ bool LineList<T>::IncreaseSize(int i)
 	MaxSize += i;
 
 	memset(data.get(), 0, MaxSize * sizeof(T));
-
-	for (int z = 0; z < length; z++)	//将原来的数据复制到新内存中
-		data.get()[z] = p.get()[z];
-
+	memcpy(data.get(), p.get(), length);//将原来的数据复制到新内存中
 
 	return true;
 }
