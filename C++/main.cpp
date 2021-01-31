@@ -5,7 +5,7 @@ int main()
 {
 	LineList<int> List;
 	for (int i = 1; List.ListInsert(i, 2); i++);
-	
+
 	List.PrintList();
 
 	List.IncreaseSize(50);
@@ -20,7 +20,35 @@ int main()
 	{
 		printf("%s", e.what());
 	}
-	
+
+	LineList<int> List1(List);
+	List.PrintList();
+	List1.PrintList();
+
+
+	LineList<int> List2 = List;
+	List.PrintList();
+	List2.PrintList();
+
+
+
+	LineList<int> List3;
+	List3 = List;
+	List.PrintList();
+	List3.PrintList();
+
+
+
+
+	LineList<int> List5(move(List));
+
+	List.PrintList();
+	List5.PrintList();
+
+	LineList<int> List4;
+	List4 = move(List5);
+	List5.PrintList();		
+	List4.PrintList();
 
 	//if (Empty(SqList))
 	//	printf("List is empty.That indicate the list Init success!\n");
