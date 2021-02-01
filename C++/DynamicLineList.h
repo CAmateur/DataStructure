@@ -31,8 +31,13 @@ public:
 	//移动赋值函数
 	LineList<T> & operator=(LineList<T> &&rhs);
 
-
-
+	friend ostream& operator<<(ostream &os, LineList<T> &rhs)
+	{
+		auto p = rhs.data.get();
+		for (int i = 0; i < rhs.length; i++)
+			os << p[i] + " ";
+		return os;
+	}
 
 	bool ListInsert(int i, T e);
 	bool ListDelete(int i, T &e);
@@ -51,6 +56,7 @@ private:
 };
 
 
+
 template<typename T>
 LineList<T>::LineList(LineList<T> &rhs)
 {
@@ -62,7 +68,7 @@ LineList<T>::LineList(LineList<T> &rhs)
 
 	memset(this->data.get(), 0, this->MaxSize * sizeof(T));
 
-	memcpy(this->data.get(), rhs.data.get(), this->length);
+	memcpy(this->data.get(), rhs.data.get(), this->length * sizeof(T));
 }
 
 
@@ -95,8 +101,8 @@ inline LineList<T> & LineList<T>::operator=(LineList<T> &rhs)
 
 
 	memset(this->data.get(), 0, this->MaxSize * sizeof(T));
-	
-	memcpy(this->data.get(), rhs.data.get(), this->length);
+
+	memcpy(this->data.get(), rhs.data.get(), this->length * sizeof(T));
 	return *this;
 }
 
@@ -238,7 +244,7 @@ bool LineList<T>::IncreaseSize(int i)
 	MaxSize += i;
 
 	memset(data.get(), 0, MaxSize * sizeof(T));
-	memcpy(data.get(), p.get(), length);//将原来的数据复制到新内存中
+	memcpy(data.get(), p.get(), length * sizeof(T));//将原来的数据复制到新内存中
 
 	return true;
 }

@@ -50,6 +50,8 @@ int main()
 	List5.PrintList();		
 	List4.PrintList();
 
+	cout << List4 << endl;
+
 	//if (Empty(SqList))
 	//	printf("List is empty.That indicate the list Init success!\n");
 
