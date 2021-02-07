@@ -1,3 +1,10 @@
+# this指针
+
+##### 1、this指针指向的是对象的首地址，首地址一般是第一个变量的地址，若有虚函数，则是虚函数表的首地址
+
+2、return this;返回的是对象的首地址
+       return *this;返回的是对象；
+
 # share_ptr
 
 ## 若智能指针指向的对象要求能被多个智能指针使用，用share_ptr
@@ -20,33 +27,33 @@ shared_ptr<int> data = make_shared<int>(5);
 
 ##### 智能指针指向一个整数型，内存大小为5个int类型的区域
 
-````c++
+```c++
 shared_ptr<int> data(new int[5]);
-````
+```
 
 ##### int类型可以换成任意类型或者对象，例如：
 
-````C++
+```c++
 shared_ptr<string> data = make_shared<string>(5);
-````
+```
 
 ## 3、需要注意的点
 
 ##### 智能指针的赋值会增加引用次数
 
-````c++
+```c++
 shared_ptr<int> data(new int[5]);
 shared_ptr<int> p = data;
-````
+```
 
 p和data指向的是一个对象，而引用的次数代表着对象被多少个指针指向着，故p.use_count()和data.use_count()都为2，
 
 ##### 不会增加引用次数的方式
 
-````c++
+```c++
 shared_ptr<int> data(new int[5]);
 data.reset(p.get());
-````
+```
 
 这样的方式，也会使data.use_count()重置为1
 
@@ -54,7 +61,7 @@ data.reset(p.get());
 
 # unique_ptr
 
-````c++
+```c++
 template<typename T>
 class LineList
 {
@@ -82,13 +89,13 @@ private:
 	int MaxSize;		//顺序表的最大容量
 	int length;
 };
-````
+```
 
 
 
 
 
-````c++
+```c++
 template<typename T>
 LineList<T>::LineList(LineList<T> &&rhs)
 {
@@ -102,11 +109,11 @@ LineList<T>::LineList(LineList<T> &&rhs)
 
 }
 
-````
+```
 
 通过move调用unique_ptr的移动重载=
 
-````c++
+```c++
 template<typename T>
 inline LineList<T> & LineList<T>::operator=(LineList<T> &rhs)
 {
@@ -130,11 +137,11 @@ inline LineList<T> & LineList<T>::operator=(LineList<T> &rhs)
 	}
 	return *this;
 }
-````
+```
 
 
 
-````c++
+```c++
 template<typename T>
 inline LineList<T> & LineList<T>::operator=(LineList<T> && rhs)
 {
@@ -150,13 +157,13 @@ inline LineList<T> & LineList<T>::operator=(LineList<T> && rhs)
 	rhs.MaxSize = 0;
 	return *this;
 }
-````
+```
 
 通过move调用unique_ptr的移动重载=
 
-````c++
+```c++
 this->data = move(rhs.data);
-````
+```
 
 执行这条语句前
 
@@ -168,14 +175,59 @@ this->data = move(rhs.data);
 
 可以看到指针移动到另一个智能指针里面去了
 
-````c++
+```c++
 	LineList<int> List4;
 	List4 = move(List5);
 	List5.PrintList();		
 	List4.PrintList();
-````
+```
 
 通过move调用LineList的移动重载=
+
+
+
+# 重载
+
+类中的重载会有个默认参数
+
+```c++
+ LineList<T>& operator+( LineList<T> &rhs);
+```
+
+这样写其实代码是这样的
+
+```c++
+ LineList<T>& operator<<( *this,LineList<T> &rhs);
+```
+
+故当重载<<时,在类中这样写会出现提供过多参数的错误
+
+```c++
+ostream& operator<<(ostream & os,LineList<T> &rhs);
+```
+
+
+
+要避免这样的错误需要用类外部的重载<<函数，但是这样就不能访问类内部的成员了。
+
+要实现写在类中能访问类内成员，还不出现提供过多参数的错误
+
+#### 第一种解决方法:
+
+```c++
+friend ostream& operator<<(ostream & os,  LineList<T> &rhs)
+{
+    //逻辑代码
+}
+```
+
+注意:不能在类外实现重载的逻辑代码
+
+因为友元函数虽然可以访问类内部的成员，但是它相对于类是独立的，它的实现不能依赖类。代码中用到模板类template<class T> 而在类内声明友元函数的时候也用到了<T>,所以此时友元函数是依赖于类的实现而实现的，编译器才会报错。 
+
+#### 第二种解决方法：
+
+在类的内部声明友元函数的时候在之前为它单独配一个模板类型，然后在外部实现 
 
 
 
